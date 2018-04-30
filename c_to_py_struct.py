@@ -26,28 +26,25 @@ def get_type_from_line(line):
 	type_str = ''
 	tuple_label = ''
 	words = line.split()
-	if len(words) < 2:
-		return ('','')
-
-	if words[0] in ctype_to_struct:
-		print(words[0])
-		# add the type to the type_str
-		c_type = ctype_to_struct[words[0]]
-		type_str += c_type
-		if '[' in line:
-			# get the number in between
-			num = int(line[line.find("[")+1:line.find("]")])
-			# don't include the [] in the label
-			label_base = words[1][:words[1].find('[')]
-			tuple_label = '{}0'.format(label_base)
-			# add to the type_str, starting at 1 since we already added one
-			for i in range(1, num):
-				type_str += c_type
-				tuple_label += ' {}{}'.format(label_base, i)
+	if len(words) >= 2:
+		if words[0] in ctype_to_struct:
+			# add the type to the type_str
+			c_type = ctype_to_struct[words[0]]
+			type_str += c_type
+			if '[' in line:
+				# get the number in between
+				num = int(line[line.find("[")+1:line.find("]")])
+				# don't include the [] in the label
+				label_base = words[1][:words[1].find('[')]
+				tuple_label = '{}0'.format(label_base)
+				# add to the type_str, starting at 1 since we already added one
+				for i in range(1, num):
+					type_str += c_type
+					tuple_label += ' {}{}'.format(label_base, i)
+			else:
+				tuple_label = words[1].replace(';', '')
 		else:
-			tuple_label = words[1].replace(';', '')
-	else:
-		print('{} not defined, please add'.format(words[0]))
+			print('{} not defined, please add'.format(words[0]))
 	return type_str, tuple_label
 
 
